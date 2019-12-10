@@ -1,0 +1,8 @@
+[tool.poetry]
+name = 'lolesports_stats'
+version = '0.1.0'
+description = ''
+authors = ['Victor Otieno Omondi <victor@slick.co.ke>']
+
+[tool.poetry.dependencies]
+python = '^3.7'
