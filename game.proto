@@ -1,0 +1,71 @@
+syntax = "proto3";
+
+package lol_sounds;
+
+message Event {
+  enum Side {
+    SIDE_UNSPECIFIED = 0;
+    BLUE = 1;
+    RED = 2;
+  }
+  Side side = 1;
+
+  enum Scenario {
+    UNSPECIFIED = 0;
+
+    // Frequent scenario will take priority numbers 1 - 15
+    // Kills
+    KILL = 1;
+    FIRST_BLOOD = 2;
+    SHUTDOWN = 10;
+    DOUBLE = 8;
+    TRIPLE = 9;
+    QUADRA = 14;
+    PENTA = 15;
+    SPREE = 11;
+    RAMPAGE = 12;
+    UNSTOPPABLE = 13;
+    DOMINATING = 16;
+    GODLIKE = 17;
+    LEGENDARY = 18;
+
+    // Objectives
+    TURRET = 3;
+    INHIBITOR = 4;
+    DRAGON = 6;
+    BARON = 7;
+
+    // Miscellaneous
+    GAME_END = 5;
+  }
+  Scenario scenario = 2;
+}
+
+// A snapshot represents a time when an event(s) take place
+message Snapshot {
+  // Indicates the approximate YouTube player time when the events happen
+  double time = 1;
+  repeated Event events = 2;
+}
+
+message Game {
+  message Metadata {
+    repeated string teams = 1;
+
+    // Empty patch string means that stats are not available
+    string patch = 2;
+  }
+  Metadata metadata = 1;
+
+  // The time interval in seconds between TimeFrames
+  int32 time_interval = 2;
+
+  // These represent the YouTube player times in seconds
+  double start_time = 3;
+  double end_time = 4;
+
+  message TimeFrame {
+    repeated Snapshot snapshots = 1;
+  }
+  repeated TimeFrame frames = 5;
+}
