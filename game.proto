@@ -43,8 +43,8 @@ message Event {
 
 // A snapshot represents a time when an event(s) take place
 message Snapshot {
-  // Indicates the approximate YouTube player time when the events happen
-  double time = 1;
+  // Indicates the in game time in seconds when the events took place.
+  double game_time = 1;
   repeated Event events = 2;
 }
 
@@ -60,12 +60,20 @@ message Game {
   // The time interval in seconds between TimeFrames
   int32 time_interval = 2;
 
-  // These represent the YouTube player times in seconds
-  double start_time = 3;
-  double end_time = 4;
+  message Vod {
+    // The video id
+    string id = 1;
+    // The platform the vod is on. (YouTube, Twitch, Znipe e.t.c)
+    string platform = 2;
+
+    // These represent the video player times in seconds
+    double start_time = 3;
+    double end_time = 4;
+  }
+  repeated Vod vods = 3;
 
   message TimeFrame {
     repeated Snapshot snapshots = 1;
   }
-  repeated TimeFrame frames = 5;
+  repeated TimeFrame frames = 4;
 }
