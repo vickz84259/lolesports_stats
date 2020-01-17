@@ -6,3 +6,5 @@ authors = ['Victor Otieno Omondi <victor@slick.co.ke>']
 
 [tool.poetry.dependencies]
 python = '^3.7'
+[tool.poetry.dev-dependencies]
+mypy = "^0.761.0"
