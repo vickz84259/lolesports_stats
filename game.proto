@@ -39,6 +39,8 @@ message Event {
     GAME_END = 5;
   }
   Scenario scenario = 2;
+
+  Participant.ID participant_id = 3;
 }
 
 // A snapshot represents a time when an event(s) take place
@@ -48,13 +50,63 @@ message Snapshot {
   repeated Event events = 2;
 }
 
-message Game {
-  message Metadata {
-    repeated string teams = 1;
+message Participant {
+  // The esports player id.
+  int64 player_id = 1;
 
-    // Empty patch string means that stats are not available
-    string patch = 2;
+  // Game specific details
+  string champion = 2;
+
+  enum ID {
+    ID_UNSPECIFIED = 0;
+
+    BLUE_TOP = 1;
+    BLUE_JUNGLE = 2;
+    BLUE_MID = 3;
+    BLUE_BOT = 4;
+    BLUE_SUPPORT = 5;
+
+    RED_TOP = 6;
+    RED_JUNGLE = 7;
+    RED_MID = 8;
+    RED_BOT = 9;
+    RED_SUPPORT = 10;
   }
+  ID id = 3; // The participant id
+
+  enum Role {
+    ROLE_UNSPECIFIED = 0;
+
+    TOP = 1;
+    JUNGLE = 2;
+    MID = 3;
+    BOTTOM = 4;
+    SUPPORT = 5;
+  }
+  Role role = 4;
+
+  string summoner_name = 5;
+}
+
+message Metadata {
+  int64 game_id = 1;
+  int64 match_id = 2;
+
+  // Empty patch string means that stats are not available
+  string patch = 3;
+
+  message Team {
+    int64 id = 1;
+    string name = 2; // The full name of the team.
+    string code = 3; // The team's name in short form.
+
+    repeated Participant participants = 4;
+  }
+  Team blue_team = 4;
+  Team red_team = 5;
+}
+
+message Game {
   Metadata metadata = 1;
 
   // The time interval in seconds between TimeFrames
