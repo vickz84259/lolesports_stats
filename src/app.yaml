@@ -1,4 +1,7 @@
 runtime: python37
+entrypoint: >
+  gunicorn -b :$PORT main:web_app
+  --worker-class aiohttp.GunicornUVLoopWebWorker
 
 instance_class: B1
 manual_scaling:
