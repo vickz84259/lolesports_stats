@@ -1,17 +1,23 @@
 src_dir := src
 
 schema_fname := game
-proto_output := $(src_dir)/$(schema_fname)_pb2.py
+proto_prefix := $(src_dir)/$(schema_fname)_pb2
+
+proto_output := $(proto_prefix).py
+proto_stub := $(proto_prefix).pyi
 
 requirements_file := $(src_dir)/requirements.txt
 
 .PHONY: all build deploy deploy_local
 all: deploy
 
-build: $(proto_output) $(src_dir)/app.yaml $(requirements_file)
+build: $(proto_output) $(proto_stub) $(src_dir)/app.yaml $(requirements_file)
 
 $(proto_output): $(schema_fname).proto
-	protoc --python_out=src $<
+	protoc --python_out=$(src_dir) $<
+
+$(proto_stub): $(schema_fname).proto
+	protoc --mypy_out=$(src_dir) $<
 
 $(requirements_file): poetry.lock
 	poetry export -f requirements.txt -o $(requirements_file)
