@@ -2,12 +2,13 @@ syntax = "proto3";
 
 package lol_sounds;
 
+enum Side {
+  SIDE_UNSPECIFIED = 0;
+  BLUE = 1;
+  RED = 2;
+}
+
 message Event {
-  enum Side {
-    SIDE_UNSPECIFIED = 0;
-    BLUE = 1;
-    RED = 2;
-  }
   Side side = 1;
 
   enum Scenario {
@@ -18,10 +19,14 @@ message Event {
     KILL = 1;
     FIRST_BLOOD = 2;
     SHUTDOWN = 10;
+
+    // multi-kills
     DOUBLE = 8;
     TRIPLE = 9;
     QUADRA = 14;
     PENTA = 15;
+
+    // sprees
     SPREE = 11;
     RAMPAGE = 12;
     UNSTOPPABLE = 13;
@@ -37,6 +42,8 @@ message Event {
 
     // Miscellaneous
     GAME_END = 5;
+    ACE = 19;
+    EXECUTED = 20;
   }
   Scenario scenario = 2;
 
@@ -100,10 +107,11 @@ message Metadata {
     string name = 2; // The full name of the team.
     string code = 3; // The team's name in short form.
 
-    repeated Participant participants = 4;
+    Side side = 4;
+
+    repeated Participant participants = 5;
   }
-  Team blue_team = 4;
-  Team red_team = 5;
+  repeated Team teams = 4;
 }
 
 message Game {
@@ -113,10 +121,13 @@ message Game {
   int32 time_interval = 2;
 
   message Vod {
-    // The video id
-    string id = 1;
+    // The vod id (Riot specific)
+    int64 id = 1;
     // The platform the vod is on. (YouTube, Twitch, Znipe e.t.c)
     string platform = 2;
+    // The id of the video based on the platform
+    string parameter = 5;
+    string locale = 6;
 
     // These represent the video player times in seconds
     double start_time = 3;
