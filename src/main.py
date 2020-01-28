@@ -1,13 +1,17 @@
-import sys
+# import sys
 
-from aiohttp import web
+from aiohttp import web, ClientSession
 from loguru import logger
+
+import lol
+import riot_api
 
 # Setting up the logger
 format = '{time:YYYY-MM-DD HH:mm:ss ZZ} | {level: <8} | {message}'
 logger.configure(
     handlers=[
-        dict(sink=sys.stderr, format=format, level='DEBUG')
+        dict(sink="file_{time}.log", format=format, level='DEBUG',
+             backtrace=False, diagnose=False)
     ]
 )
 
@@ -23,17 +27,29 @@ async def index(request: web.Request) -> web.Response:
 async def init(request: web.Request) -> web.Response:
     logger.info('Service has started.')
 
-    '''
-    game_id = 102844412722519367
-    lol.process_match(game_id)'''
+    await lol.init_processing()
 
     logger.info('Completed processing.')
 
-    return web.Response()
+    return web.Response(text='Finished')
+
+
+async def session_handler(app):
+    # Startup code
+    app[riot_api.SESSION_KEY] = ClientSession(raise_for_status=True)
+    riot_api.State.app = app
+
+    yield
+
+    # Cleanup code
+    session = app[riot_api.SESSION_KEY]
+    await session.close()
 
 
 async def web_app() -> web.Application:
     app = web.Application()
     app.add_routes(routes)
+
+    app.cleanup_ctx.append(session_handler)
 
     return app
