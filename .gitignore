@@ -1,3 +1,9 @@
 .vscode/*
 
 *_pb2.py
+
+__pycache__/
+*.py[cod]
+
+.mypy_cache/
+*_pb2.pyi

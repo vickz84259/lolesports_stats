@@ -6,3 +6,13 @@ authors = ['Victor Otieno Omondi <victor@slick.co.ke>']
 
 [tool.poetry.dependencies]
 python = '^3.7'
+aiohttp = "^3.6.2"
+uvloop = "^0.14.0"
+gunicorn = "^20.0.4"
+loguru = "^0.4.1"
+protobuf = "^3.11.2"
+[tool.poetry.dev-dependencies]
+mypy = "^0.761.0"
+flake8 = "^3.7.9"
+autopep8 = "^1.4.4"
+mypy-protobuf = "^1.16"
